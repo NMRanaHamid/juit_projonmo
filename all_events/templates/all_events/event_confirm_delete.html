@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-xl mx-auto px-6 py-12 bg-white rounded-lg shadow-md mt-10">
+
+  <!-- Heading -->
+  <h1 class="text-3xl font-bold text-red-600 mb-6 text-center">Confirm Delete</h1>
+
+  <!-- Message -->
+  <p class="text-lg text-gray-700 text-center mb-8">
+    Are you sure you want to delete <span class="font-semibold text-black">"{{ event.title }}"</span>?
+  </p>
+
+  <!-- Form Buttons -->
+  <form method="post" class="flex justify-center gap-4">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition">
+      ✅ Yes, delete
+    </button>
+    <a href="{% url 'all_events:event_detail' event.pk %}" 
+       class="bg-gray-200 text-gray-800 px-5 py-2 rounded hover:bg-gray-300 transition">
+      ❌ Cancel
+    </a>
+  </form>
+
+</div>
+{% endblock %}

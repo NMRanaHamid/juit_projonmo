@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
+  <h1 class="text-4xl font-extrabold mb-3 text-gray-900">{{ job.title }}</h1>
+  <h3 class="text-2xl text-gray-600 mb-6">{{ job.company }} &mdash; {{ job.location }}</h3>
+
+  <p class="mb-6 whitespace-pre-line text-gray-700 leading-relaxed">{{ job.description }}</p>
+
+  {% if job.requirements %}
+    <h4 class="text-xl font-semibold mb-2 text-gray-800 border-l-4 border-blue-600 pl-3">Requirements:</h4>
+    <p class="mb-6 whitespace-pre-line text-gray-700 leading-relaxed">{{ job.requirements }}</p>
+  {% endif %}
+
+  <div class="text-gray-600 space-y-1 mb-6">
+    <p><strong class="text-gray-800">Posted by:</strong> {{ job.posted_by.get_full_name|default:"Unknown" }}</p>
+    <p><strong class="text-gray-800">Posted on:</strong> {{ job.posted_at|date:"M d, Y" }}</p>
+    {% if job.deadline %}
+      <p><strong class="text-gray-800">Application Deadline:</strong> {{ job.deadline|date:"M d, Y" }}</p>
+    {% endif %}
+  </div>
+
+  {% if user == job.posted_by %}
+    <div class="flex space-x-4">
+      <a href="{% url 'jobs:job_update' job.pk %}" 
+         class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-md shadow-md transition duration-300">
+         Edit
+      </a>
+      <a href="{% url 'jobs:job_delete' job.pk %}" 
+         class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md shadow-md transition duration-300">
+         Delete
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

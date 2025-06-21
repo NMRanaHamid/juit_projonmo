@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <h2 class="text-3xl font-bold text-blue-800 mb-8 text-center">🎓 Alumni Directory</h2>
+
+  {% if alumni_list %}
+    {% regroup alumni_list by user.profile.batch as batch_list %}
+
+    {% for batch_group in batch_list %}
+      <h3 class="text-2xl font-semibold mb-4 mt-10 border-b border-blue-300 pb-2">
+        Batch: {{ batch_group.grouper|default:"Unknown Batch" }}
+      </h3>
+      <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+        {% for alumni in batch_group.list %}
+          <a href="{% url 'alumni_detail' alumni.pk %}" 
+             class="block bg-white p-4 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
+            
+            {% if alumni.user.profile.avatar %}
+              <img src="{{ alumni.user.profile.avatar.url }}" 
+                   alt="{{ alumni.user.get_full_name }}" 
+                   class="w-full h-48 object-cover rounded mb-4 border">
+            {% else %}
+              <div class="w-full h-48 bg-gray-200 rounded mb-4 border flex items-center justify-center text-gray-400">
+                No Image
+              </div>
+            {% endif %}
+
+            <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ alumni.user.get_full_name }}</h3>
+            <p class="text-sm text-gray-600">{{ alumni.current_position|default:"Position not set" }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <p class="text-center text-gray-500 mt-10">No alumni records found yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

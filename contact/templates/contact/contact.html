@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+  <h2 class="text-3xl font-bold mb-6 text-center">Contact Us</h2>
+
+  <!-- {% if messages %}
+    {% for message in messages %}
+      <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">{{ message }}</div>
+    {% endfor %}
+  {% endif %} -->
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="space-y-4">
+      {{ form.non_field_errors }}
+      <div>
+        {{ form.name.label_tag }}<br>
+        {{ form.name }}
+        {{ form.name.errors }}
+      </div>
+      <div>
+        {{ form.email.label_tag }}<br>
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+      <div>
+        {{ form.subject.label_tag }}<br>
+        {{ form.subject }}
+        {{ form.subject.errors }}
+      </div>
+      <div>
+        {{ form.message.label_tag }}<br>
+        {{ form.message }}
+        {{ form.message.errors }}
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Send Message</button>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-10">
+  <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">{{ action }} Event</h1>
+
+  <form method="post" class="bg-white shadow-md rounded px-8 py-6 space-y-6 border border-gray-200">
+    {% csrf_token %}
+    
+    <!-- Crispy-rendered form -->
+    {{ form|crispy }}
+
+    <!-- Action buttons -->
+    <div class="flex justify-between">
+      <button type="submit" 
+              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+        {{ action }}
+      </button>
+      <a href="{% url 'all_events:event_list' %}" 
+         class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

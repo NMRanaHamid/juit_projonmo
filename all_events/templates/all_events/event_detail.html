@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-10 bg-white rounded-lg shadow-md">
+
+  <!-- Event Title -->
+  <h1 class="text-4xl font-bold text-blue-800 mb-4">{{ event.title }}</h1>
+
+  <!-- Event Date -->
+  <p class="text-sm text-gray-600 mb-6">
+    <strong class="text-gray-700">Date:</strong> 
+    {{ event.event_date|date:"F j, Y" }}
+  </p>
+
+  <!-- Event Description -->
+<div class="mb-8">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-1">Description</h2>
+  <div class="bg-gray-50 border border-gray-200 p-5 rounded-md text-gray-700 leading-relaxed shadow-sm">
+    {{ event.description|linebreaks }}
+  </div>
+</div>
+
+
+  <!-- Action Buttons -->
+  <div class="flex flex-wrap items-center gap-4">
+    <a href="{% url 'all_events:event_list' %}" 
+       class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition">
+      ← Back to Events
+    </a>
+
+    {% if user.is_staff %}
+      <a href="{% url 'all_events:event_edit' event.pk %}" 
+         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+        ✏️ Edit
+      </a>
+      <a href="{% url 'all_events:event_delete' event.pk %}" 
+         class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+        🗑️ Delete
+      </a>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

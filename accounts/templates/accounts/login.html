@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="flex flex-col md:flex-row justify-center items-center min-h-screen bg-gray-50 px-4">
+
+  <!-- Left: Image -->
+  <div class="hidden md:block md:w-1/2">
+    <img src="https://static.vecteezy.com/system/resources/thumbnails/006/912/004/small_2x/secure-login-and-sign-up-concept-illustration-vector.jpg" alt="Login Illustration" class="w-full h-auto">
+  </div>
+
+  <!-- Right: Login Form -->
+  <div class="w-full max-w-md bg-white p-8 rounded shadow-md">
+    <h2 class="text-3xl font-bold mb-6 text-center text-blue-700">Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      <input name="username" type="text" placeholder="Username" required class="w-full border border-gray-300 p-3 rounded mb-4 focus:outline-none focus:ring focus:border-blue-500">
+      <input name="password" type="password" placeholder="Password" required class="w-full border border-gray-300 p-3 rounded mb-4 focus:outline-none focus:ring focus:border-blue-500">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700 transition">Login</button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

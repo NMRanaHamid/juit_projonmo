@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="relative bg-cover bg-center h-screen" style="background-image: url('../static/images/convoc.jpg');">
+  <div class="absolute inset-0 bg-black opacity-20"></div>
+  <div class="relative z-10 flex flex-col items-center justify-center text-white text-center h-full">
+    <h1 class="text-5xl font-bold mb-4">Welcome to JUIT Projonmo</h1>
+    <p class="text-xl mb-6">Connecting graduates, sharing opportunities, and celebrating achievements.</p>
+    
+    {% if not user.is_authenticated %}
+    <a href="/accounts/register/" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg shadow">Join Now</a>
+    {% endif %}
+  </div>
+</section>
+
+
+<!-- ABOUT SECTION -->
+<section class="py-16 bg-white text-center">
+  <h2 class="text-3xl font-bold text-gray-800 mb-4">Who We Are</h2>
+  <p class="max-w-2xl mx-auto text-gray-600">JUIT Projonmo is a vibrant community of alumni, built to foster lifelong connections, celebrate success stories, and support current students with valuable resources and inspiration.</p>
+</section>
+
+<!-- GALLERY SECTION -->
+<section class="py-16 bg-gray-100">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Our Moments</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 md:px-20">
+    {% for i in "123456" %}
+    <div class="overflow-hidden rounded-lg shadow-md">
+      <img src="https://source.unsplash.com/400x300/?college,alumni,{{ i }}" alt="Gallery Image" class="w-full h-60 object-cover hover:scale-105 transition duration-300">
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- FEATURED ALUMNI -->
+<section class="py-16 bg-white text-center">
+  <h2 class="text-3xl font-bold text-gray-800 mb-8">Featured Alumni</h2>
+  <div class="flex flex-wrap justify-center gap-6 px-4">
+    {% for i in "123" %}
+    <div class="bg-gray-100 rounded-lg p-6 w-72 shadow hover:shadow-lg transition">
+      <img class="w-24 h-24 rounded-full mx-auto mb-4" src="https://source.unsplash.com/100x100/?person,{{ i }}" alt="Alumni">
+      <h3 class="text-xl font-semibold">Alumni Name</h3>
+      <p class="text-gray-600 text-sm">Software Engineer at XYZ</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- EVENTS SECTION -->
+<section class="py-16 bg-gray-100">
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Upcoming Events</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-20">
+    {% for i in "123" %}
+    <div class="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
+      <h4 class="text-xl font-bold mb-2">Alumni Meetup {{ i }}</h4>
+      <p class="text-gray-600 text-sm">Join us for an exciting networking event in your city with industry leaders and fellow graduates.</p>
+      <a href="/events/" class="inline-block mt-4 text-blue-600 hover:underline">Learn More</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="py-16 bg-white text-center">
+  <h2 class="text-3xl font-bold text-gray-800 mb-8">What Our Alumni Say</h2>
+  <div class="max-w-4xl mx-auto space-y-8">
+    {% for i in "123" %}
+    <div class="bg-gray-50 p-6 rounded-lg shadow">
+      <p class="italic text-gray-700">"JUIT Projonmo helped me stay connected and grow professionally after graduation. I highly recommend it!"</p>
+      <p class="mt-4 font-bold text-blue-600">— Alumni {{ i }}</p>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
