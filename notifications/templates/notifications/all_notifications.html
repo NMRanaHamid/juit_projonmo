@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded shadow">
+    <h1 class="text-3xl font-bold mb-6">Your Notifications</h1>
+
+    {% if notifications %}
+        <ul class="space-y-4">
+        {% for n in notifications %}
+            <li class="p-4 border rounded bg-gray-50 hover:bg-gray-100 transition">
+                <strong>{{ n.title }}</strong><br>
+                {{ n.message }}<br>
+                {% if n.url %}
+                    <a href="{{ n.url }}" class="text-blue-500 underline">Go to link</a><br>
+                {% endif %}
+                <span class="text-xs text-gray-400">
+                    Type: {{ n.notif_type|default:"General" }} |
+                    {{ n.created_at|date:"M d, Y H:i" }}
+                </span>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-500">No notifications yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

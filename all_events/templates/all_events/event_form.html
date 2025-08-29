@@ -1,26 +1,32 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="max-w-2xl mx-auto px-4 py-10">
-  <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">{{ action }} Event</h1>
 
-  <form method="post" class="bg-white shadow-md rounded px-8 py-6 space-y-6 border border-gray-200">
+<div class="max-w-2xl mx-auto px-4 py-12">
+  <!-- Page Title -->
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-8 text-center text-blue-800 drop-shadow-sm">
+    {{ action }} Event
+  </h1>
+
+  <!-- Form Container -->
+  <form method="post" class="bg-white shadow-2xl rounded-3xl px-10 py-8 space-y-6 border border-gray-200 hover:shadow-3xl transition duration-300">
     {% csrf_token %}
     
     <!-- Crispy-rendered form -->
     {{ form|crispy }}
 
     <!-- Action buttons -->
-    <div class="flex justify-between">
+    <div class="flex flex-wrap justify-center gap-4 mt-4">
       <button type="submit" 
-              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-        {{ action }}
+              class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-6 py-3 rounded-full shadow-lg hover:from-blue-700 hover:to-blue-600 transition flex items-center gap-2">
+        <i class="fas fa-save"></i> {{ action }}
       </button>
       <a href="{% url 'all_events:event_list' %}" 
-         class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition">
-        Cancel
+         class="bg-gray-100 text-gray-700 px-6 py-3 rounded-full shadow hover:bg-gray-200 transition flex items-center gap-2">
+        <i class="fas fa-times"></i> Cancel
       </a>
     </div>
   </form>
 </div>
+
 {% endblock %}

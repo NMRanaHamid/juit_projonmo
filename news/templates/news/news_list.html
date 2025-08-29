@@ -1,26 +1,50 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 py-10">
-  <h1 class="text-4xl font-extrabold mb-8 text-gray-900 tracking-tight">Latest News</h1>
+<div class="max-w-6xl mx-auto px-4 py-12">
 
-  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-    {% for news in news_items %}
-    <a href="{% url 'news:news_detail' news.pk %}" class="group block bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 group-hover:text-blue-600 mb-2 truncate">{{ news.title }}</h2>
-      <p class="text-sm text-gray-500 mb-4">Published on {{ news.published_date|date:"M d, Y" }}</p>
-      <p class="text-gray-700 line-clamp-3">{{ news.content }}</p>
-    </a>
-    {% empty %}
-    <p class="text-center text-gray-500 col-span-full">No news found.</p>
-    {% endfor %}
-  </div>
-
+  <!-- Page Title -->
+  <h1 class="text-4xl md:text-5xl font-extrabold mb-10 text-gray-900 tracking-tight text-center drop-shadow-sm">
+    Latest News
+  </h1>
   {% if user.is_staff %}
-  <div class="mt-10 text-center">
-    <a href="{% url 'news:news_create' %}" class="inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold shadow hover:bg-green-700 transition duration-300">
-      Add News
+  <div class="mt-12 text-center">
+    <a href="{% url 'news:news_create' %}" 
+       class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg transition duration-300">
+      <i class="fas fa-plus"></i> Add News
     </a>
   </div>
   {% endif %}
+
+  <!-- News Grid -->
+  <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    
+    {% for news in news_items %}
+    <a href="{% url 'news:news_detail' news.pk %}" 
+       class="group block bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 p-6 hover:-translate-y-1 transform">
+      
+      <!-- Title -->
+      <h2 class="text-xl md:text-2xl font-semibold text-gray-800 group-hover:text-blue-600 mb-3 truncate">
+        {{ news.title }}
+      </h2>
+
+      <!-- Date -->
+      <p class="text-sm text-gray-500 mb-4 flex items-center gap-2">
+        <i class="far fa-calendar-alt"></i>
+        Published on {{ news.published_date|date:"M d, Y" }}
+      </p>
+
+      <!-- Content snippet -->
+      <p class="text-gray-700 line-clamp-4 leading-relaxed">
+        {{ news.content }}
+      </p>
+    </a>
+    {% empty %}
+    <p class="text-center text-gray-500 col-span-full mt-10 italic">No news found.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Add News Button for Staff -->
+  
+
 </div>
 {% endblock %}

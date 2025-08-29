@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-{% load widget_tweaks %}
 
 {% block content %}
 <div class="max-w-xl mx-auto bg-white p-8 mt-10 rounded shadow-md">
   <h2 class="text-3xl font-bold mb-6 text-center text-gray-800">Edit Profile</h2>
+
   <form method="post" enctype="multipart/form-data" class="space-y-6">
     {% csrf_token %}
 
@@ -12,17 +11,25 @@
     <div>
       <h3 class="text-xl font-semibold mb-4 text-blue-700">Account Info</h3>
 
+      <!-- Username -->
+      <label class="block mb-1 font-medium text-gray-700" for="id_username">Username</label>
+      <input type="text" name="username" id="id_username" value="{{ form.username.value|default_if_none:'' }}" 
+             class="w-full border border-gray-300 p-2 rounded" placeholder="Username" required>
+
       <!-- First Name -->
-      <label for="{{ form.first_name.id_for_label }}" class="block mb-1 font-medium text-gray-700">First Name</label>
-      {{ form.first_name|add_class:"w-full border border-gray-300 p-2 rounded" }}
+      <label class="block mt-4 mb-1 font-medium text-gray-700" for="id_first_name">First Name</label>
+      <input type="text" name="first_name" id="id_first_name" value="{{ form.first_name.value|default_if_none:'' }}" 
+             class="w-full border border-gray-300 p-2 rounded" placeholder="First Name">
 
       <!-- Last Name -->
-      <label for="{{ form.last_name.id_for_label }}" class="block mt-4 mb-1 font-medium text-gray-700">Last Name</label>
-      {{ form.last_name|add_class:"w-full border border-gray-300 p-2 rounded" }}
+      <label class="block mt-4 mb-1 font-medium text-gray-700" for="id_last_name">Last Name</label>
+      <input type="text" name="last_name" id="id_last_name" value="{{ form.last_name.value|default_if_none:'' }}" 
+             class="w-full border border-gray-300 p-2 rounded" placeholder="Last Name">
 
       <!-- Email -->
-      <label for="{{ form.email.id_for_label }}" class="block mt-4 mb-1 font-medium text-gray-700">Email</label>
-      {{ form.email|add_class:"w-full border border-gray-300 p-2 rounded" }}
+      <label class="block mt-4 mb-1 font-medium text-gray-700" for="id_email">Email</label>
+      <input type="email" name="email" id="id_email" value="{{ form.email.value|default_if_none:'' }}" 
+             class="w-full border border-gray-300 p-2 rounded" placeholder="Email">
     </div>
 
     <!-- Profile Info -->
@@ -30,26 +37,39 @@
       <h3 class="text-xl font-semibold mb-4 text-blue-700">Profile Info</h3>
 
       <!-- Avatar -->
-      <label for="{{ profile_form.avatar.id_for_label }}" class="block mb-1 font-medium text-gray-700">Avatar</label>
-      {{ profile_form.avatar|add_class:"w-full border border-gray-300 p-2 rounded" }}
-
+      <label class="block mb-1 font-medium text-gray-700" for="id_avatar">Avatar</label>
+      <input type="file" name="avatar" id="id_avatar" class="w-full border border-gray-300 p-2 rounded">
 
       <!-- Bio -->
-      <label for="{{ profile_form.bio.id_for_label }}" class="block mt-4 mb-1 font-medium text-gray-700">Bio</label>
-      {{ profile_form.bio|add_class:"w-full border border-gray-300 p-2 rounded" }}
+      <label class="block mt-4 mb-1 font-medium text-gray-700" for="id_bio">Bio</label>
+      <textarea name="bio" id="id_bio" rows="3" 
+                class="w-full border border-gray-300 p-2 rounded" 
+                placeholder="Bio">{{ profile_form.bio.value|default_if_none:'' }}</textarea>
 
       <!-- Batch -->
-      <label for="{{ profile_form.batch.id_for_label }}" class="block mt-4 mb-1 font-medium text-gray-700">Batch</label>
-      {{ profile_form.batch|add_class:"w-full border border-gray-300 p-2 rounded" }}
+      <label class="block mt-4 mb-1 font-medium text-gray-700" for="id_batch">Batch</label>
+      <input type="text" name="batch" id="id_batch" value="{{ profile_form.batch.value|default_if_none:'' }}" 
+             class="w-full border border-gray-300 p-2 rounded" placeholder="Batch" required>
+      <!-- LinkedIn -->
+<label class="block mt-4 mb-1 font-medium text-gray-700" for="id_linkedin">LinkedIn</label>
+<input type="url" name="linkedin" id="id_linkedin" 
+       value="{{ profile_form.linkedin.value|default_if_none:'' }}" 
+       class="w-full border border-gray-300 p-2 rounded" 
+       placeholder="https://linkedin.com/in/your-profile">
 
-      <!-- Optional: batch  (if exists) -->
+<!-- Facebook -->
+<label class="block mt-4 mb-1 font-medium text-gray-700" for="id_facebook">Facebook</label>
+<input type="url" name="facebook" id="id_facebook" 
+       value="{{ profile_form.facebook.value|default_if_none:'' }}" 
+       class="w-full border border-gray-300 p-2 rounded" 
+       placeholder="https://facebook.com/your-profile">
 
     </div>
 
-    <!-- Submit Button -->
+    <!-- Submit -->
     <div class="text-center">
-      <button class="bg-blue-600 text-white px-6 py-2 rounded font-semibold hover:bg-blue-700 transition">
-        Update
+      <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-semibold hover:bg-blue-700 transition">
+        Update Profile
       </button>
     </div>
   </form>

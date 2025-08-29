@@ -1,42 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 py-10 bg-white rounded-lg shadow-md">
+<div class="max-w-4xl mx-auto px-4 py-12 bg-white rounded-3xl shadow-2xl">
 
   <!-- Event Title -->
-  <h1 class="text-4xl font-bold text-blue-800 mb-4">{{ event.title }}</h1>
+  <h1 class="text-5xl font-extrabold text-blue-800 mb-4 drop-shadow-sm">{{ event.title }}</h1>
 
   <!-- Event Date -->
-  <p class="text-sm text-gray-600 mb-6">
-    <strong class="text-gray-700">Date:</strong> 
-    {{ event.event_date|date:"F j, Y" }}
+  <p class="text-gray-600 mb-8 flex items-center space-x-2">
+    <i class="fas fa-calendar-alt text-blue-600"></i>
+    <span class="font-medium">Date:</span> 
+    <span>{{ event.event_date|date:"F j, Y" }}</span>
   </p>
 
   <!-- Event Description -->
-<div class="mb-8">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-3 border-b pb-1">Description</h2>
-  <div class="bg-gray-50 border border-gray-200 p-5 rounded-md text-gray-700 leading-relaxed shadow-sm">
-    {{ event.description|linebreaks }}
+  <div class="mb-10">
+    <h2 class="text-3xl font-semibold text-gray-800 mb-4 border-b border-blue-200 pb-2">Description</h2>
+    <div class="bg-gray-50 border border-gray-200 p-6 rounded-2xl text-gray-700 leading-relaxed shadow-inner hover:shadow transition duration-300">
+      {{ event.description|linebreaks }}
+    </div>
   </div>
-</div>
-
 
   <!-- Action Buttons -->
   <div class="flex flex-wrap items-center gap-4">
     <a href="{% url 'all_events:event_list' %}" 
-       class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200 transition">
-      ← Back to Events
+       class="bg-gray-100 text-gray-700 px-5 py-2 rounded-full hover:bg-gray-200 shadow transition duration-300 flex items-center gap-2">
+       <i class="fas fa-arrow-left"></i> Back to Events
     </a>
 
     {% if user.is_staff %}
       <a href="{% url 'all_events:event_edit' event.pk %}" 
-         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-        ✏️ Edit
+         class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2 rounded-full shadow hover:from-blue-700 hover:to-blue-600 transition flex items-center gap-2">
+         <i class="fas fa-edit"></i> Edit
       </a>
       <a href="{% url 'all_events:event_delete' event.pk %}" 
-         class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-        🗑️ Delete
+         class="bg-gradient-to-r from-red-600 to-red-500 text-white px-5 py-2 rounded-full shadow hover:from-red-700 hover:to-red-600 transition flex items-center gap-2">
+         <i class="fas fa-trash"></i> Delete
+      </a>
+      <!-- Registered Users List -->
+      <a href="{% url 'all_events:event_registered_users' event.pk %}"
+         class="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-5 py-2 rounded-full shadow hover:from-purple-700 hover:to-purple-600 transition flex items-center gap-2">
+         <i class="fas fa-users"></i> Registered Users
       </a>
     {% endif %}
+
+    <!-- Event Registration Button -->
+    <a href="{% url 'all_events:event_register' event.pk %}" 
+       class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full shadow hover:from-green-600 hover:to-emerald-700 transition flex items-center gap-2">
+       <i class="fas fa-user-plus"></i> Register for Event
+    </a>
   </div>
 
 </div>

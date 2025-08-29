@@ -1,26 +1,44 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-4xl mx-auto px-6 py-12 bg-white rounded-lg shadow-lg mt-10">
-  <h1 class="text-5xl font-extrabold text-gray-900 mb-4">{{ news.title }}</h1>
+<div class="max-w-4xl mx-auto px-6 py-12 bg-white rounded-3xl shadow-2xl mt-12 hover:shadow-3xl transition duration-300">
+
+  <!-- Back Button -->
+  <div class="mb-6">
+    <a href="{% url 'news:news_list' %}" 
+       class="inline-flex items-center gap-2 px-5 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-full font-semibold shadow transition duration-300">
+      <i class="fas fa-arrow-left"></i> Back to News
+    </a>
+  </div>
+
+  <!-- Title -->
+  <h1 class="text-2xl md:text-4xl font-extrabold text-blue-900 mb-4 drop-shadow-sm">
+    {{ news.title }}
+  </h1>
   
-  <p class="text-sm text-gray-500 mb-8">
-    Published on {{ news.published_date|date:"F j, Y" }}
-    {% if news.author %} | By <span class="font-medium">{{ news.author }}</span>{% endif %}
+  <!-- Meta Info -->
+  <p class="text-sm md:text-base text-gray-500 mb-8 flex flex-wrap gap-2 items-center">
+    <span>Published on {{ news.published_date|date:"F j, Y" }}</span>
+    {% if news.author %}<span>| By <span class="font-medium text-gray-800">{{ news.author }}</span></span>{% endif %}
   </p>
 
-  <article class="prose prose-lg max-w-none text-gray-800 leading-relaxed whitespace-pre-line">
+  <!-- Content -->
+  <article class="prose prose-lg md:prose-xl max-w-none text-gray-800 leading-relaxed whitespace-pre-line">
     {{ news.content }}
   </article>
 
+  <!-- Staff Controls -->
   {% if user.is_staff %}
-  <div class="mt-10 flex space-x-4">
-    <a href="{% url 'news:news_update' news.pk %}" class="px-5 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-lg font-semibold shadow transition duration-300">
-      Edit
+  <div class="mt-12 flex flex-wrap gap-4">
+    <a href="{% url 'news:news_update' news.pk %}" 
+       class="flex items-center gap-2 px-6 py-3 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full font-semibold shadow-lg transition duration-300">
+      <i class="fas fa-edit"></i> Edit
     </a>
-    <a href="{% url 'news:news_delete' news.pk %}" class="px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold shadow transition duration-300">
-      Delete
+    <a href="{% url 'news:news_delete' news.pk %}" 
+       class="flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-full font-semibold shadow-lg transition duration-300">
+      <i class="fas fa-trash-alt"></i> Delete
     </a>
   </div>
   {% endif %}
+
 </div>
 {% endblock %}

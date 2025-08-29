@@ -1,76 +1,197 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %} {% load static %}
 
 <!-- HERO SECTION -->
-<section class="relative bg-cover bg-center h-screen" style="background-image: url('../static/images/convoc.jpg');">
-  <div class="absolute inset-0 bg-black opacity-20"></div>
-  <div class="relative z-10 flex flex-col items-center justify-center text-white text-center h-full">
-    <h1 class="text-5xl font-bold mb-4">Welcome to JUIT Projonmo</h1>
-    <p class="text-xl mb-6">Connecting graduates, sharing opportunities, and celebrating achievements.</p>
-    
+<section
+  class="relative bg-cover bg-center h-screen"
+  style="background-image: url('{% static 'images/convoc.jpg' %}')"
+>
+  <div class="absolute inset-0 bg-black/20"></div>
+  <div
+    class="relative z-10 flex flex-col items-center justify-center text-white text-center h-full px-4"
+  >
+    <h1
+      class="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg opacity-0 translate-y-8 animate-[fadeInUp_1s_ease-out_0.5s_forwards]"
+    >
+      Welcome to JUIT Projonmo
+    </h1>
+    <p
+      class="text-xl md:text-2xl mb-6 drop-shadow-md opacity-0 translate-y-8 animate-[fadeInUp_1s_ease-out_0.8s_forwards]"
+    >
+      Connecting graduates, sharing opportunities, and celebrating achievements.
+    </p>
+
+    <!-- Add Tailwind inline keyframes in style tag -->
+    <style>
+      @keyframes fadeInUp {
+        0% {
+          opacity: 0;
+          transform: translateY(32px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+
     {% if not user.is_authenticated %}
-    <a href="/accounts/register/" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg shadow">Join Now</a>
+    <a
+      href="/accounts/register/"
+      class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-full shadow-lg text-lg font-semibold transition duration-300"
+    >
+      Join Now
+    </a>
     {% endif %}
   </div>
 </section>
 
-
 <!-- ABOUT SECTION -->
-<section class="py-16 bg-white text-center">
-  <h2 class="text-3xl font-bold text-gray-800 mb-4">Who We Are</h2>
-  <p class="max-w-2xl mx-auto text-gray-600">JUIT Projonmo is a vibrant community of alumni, built to foster lifelong connections, celebrate success stories, and support current students with valuable resources and inspiration.</p>
+<section class="py-20 bg-white text-center">
+  <h2 class="text-4xl font-bold text-gray-800 mb-6">Who We Are</h2>
+  <p class="max-w-3xl mx-auto text-gray-600 text-lg leading-relaxed">
+    JUIT Projonmo is a vibrant community of alumni, built to foster lifelong
+    connections, celebrate success stories, and support current students with
+    valuable resources and inspiration.
+  </p>
 </section>
 
 <!-- GALLERY SECTION -->
-<section class="py-16 bg-gray-100">
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Our Moments</h2>
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 md:px-20">
-    {% for i in "123456" %}
-    <div class="overflow-hidden rounded-lg shadow-md">
-      <img src="https://source.unsplash.com/400x300/?college,alumni,{{ i }}" alt="Gallery Image" class="w-full h-60 object-cover hover:scale-105 transition duration-300">
+<section class="py-20 bg-gray-50">
+  <h2 class="text-4xl font-bold text-center text-gray-800 mb-10">
+    Our Moments
+  </h2>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 md:px-20"
+  >
+    {% for img in gallery_images %}
+    <div
+      class="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105 cursor-pointer"
+      onclick="openModal('{% static img %}')"
+    >
+      <img
+        src="{% static img %}"
+        alt="Gallery Image"
+        class="w-full h-64 object-cover"
+      />
     </div>
     {% endfor %}
   </div>
 </section>
 
+<!-- MODAL -->
+<div
+  id="galleryModal"
+  class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50"
+>
+  <span
+    class="absolute top-5 right-10 text-white text-3xl cursor-pointer font-bold"
+    onclick="closeModal()"
+    >&times;</span
+  >
+  <img id="modalImage" class="max-h-[90vh] max-w-[90vw] rounded-lg shadow-lg" />
+</div>
+
+<script>
+  function openModal(src) {
+    document.getElementById("modalImage").src = src;
+    document.getElementById("galleryModal").classList.remove("hidden");
+    document.getElementById("galleryModal").classList.add("flex");
+  }
+
+  function closeModal() {
+    document.getElementById("galleryModal").classList.add("hidden");
+    document.getElementById("galleryModal").classList.remove("flex");
+  }
+</script>
+
 <!-- FEATURED ALUMNI -->
-<section class="py-16 bg-white text-center">
-  <h2 class="text-3xl font-bold text-gray-800 mb-8">Featured Alumni</h2>
-  <div class="flex flex-wrap justify-center gap-6 px-4">
-    {% for i in "123" %}
-    <div class="bg-gray-100 rounded-lg p-6 w-72 shadow hover:shadow-lg transition">
-      <img class="w-24 h-24 rounded-full mx-auto mb-4" src="https://source.unsplash.com/100x100/?person,{{ i }}" alt="Alumni">
-      <h3 class="text-xl font-semibold">Alumni Name</h3>
-      <p class="text-gray-600 text-sm">Software Engineer at XYZ</p>
+<section class="py-20 bg-white text-center">
+  <h2 class="text-4xl font-bold text-gray-800 mb-10">Featured Alumni</h2>
+  <div class="flex flex-wrap justify-center gap-8 px-4">
+    {% for imga in alumni_images %}
+    <div
+      class="bg-gray-100 rounded-2xl p-6 w-72 shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
+    >
+      <img
+        class="w-28 h-28 rounded-full mx-auto mb-4 border-4 border-white shadow-md object-cover"
+        src="{% static imga.image %}"
+        alt="Alumni"
+      />
+      <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ imga.name }}</h3>
+      <p class="text-gray-600 text-sm">{{ imga.designation }}</p>
     </div>
     {% endfor %}
   </div>
 </section>
 
 <!-- EVENTS SECTION -->
-<section class="py-16 bg-gray-100">
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Upcoming Events</h2>
+<section class="py-20 bg-gray-50">
+  <h2 class="text-4xl font-bold text-center text-gray-800 mb-10">
+    Upcoming Events
+  </h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-20">
-    {% for i in "123" %}
-    <div class="bg-white p-6 rounded-lg shadow hover:shadow-xl transition">
-      <h4 class="text-xl font-bold mb-2">Alumni Meetup {{ i }}</h4>
-      <p class="text-gray-600 text-sm">Join us for an exciting networking event in your city with industry leaders and fellow graduates.</p>
-      <a href="/events/" class="inline-block mt-4 text-blue-600 hover:underline">Learn More</a>
+    {% for event in upcoming_events %}
+    <div
+      class="bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-2"
+    >
+      <h4 class="text-2xl font-bold mb-2 text-gray-800">{{ event.title }}</h4>
+      <p class="text-gray-600 text-sm mb-4">
+        {{ event.description|truncatechars:80 }}
+      </p>
+      <a
+        href="{% url 'all_events:event_detail' event.pk %}"
+        class="inline-block text-blue-600 font-semibold hover:underline"
+        >Learn More</a
+      >
     </div>
+    {% empty %}
+    <p class="text-gray-500 col-span-full text-center">No upcoming events.</p>
     {% endfor %}
   </div>
 </section>
 
 <!-- TESTIMONIALS -->
-<section class="py-16 bg-white text-center">
-  <h2 class="text-3xl font-bold text-gray-800 mb-8">What Our Alumni Say</h2>
-  <div class="max-w-4xl mx-auto space-y-8">
-    {% for i in "123" %}
-    <div class="bg-gray-50 p-6 rounded-lg shadow">
-      <p class="italic text-gray-700">"JUIT Projonmo helped me stay connected and grow professionally after graduation. I highly recommend it!"</p>
-      <p class="mt-4 font-bold text-blue-600">— Alumni {{ i }}</p>
+<section class="py-20 bg-white text-center">
+  <h2 class="text-4xl font-bold text-gray-800 mb-10">What Our Alumni Say</h2>
+  <div class="max-w-5xl mx-auto space-y-8">
+    <!-- Testimonial 1 -->
+    <div
+      class="bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition"
+    >
+      <p class="italic text-gray-700 text-lg">
+        "JUIT Projonmo has been an incredible platform for reconnecting with my
+        batchmates. The events are well-organized and provide amazing networking
+        opportunities."
+      </p>
+      <p class="mt-6 font-bold text-blue-600">
+        — Ayesha Rahman, Software Engineer
+      </p>
     </div>
-    {% endfor %}
+
+    <!-- Testimonial 2 -->
+    <div
+      class="bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition"
+    >
+      <p class="italic text-gray-700 text-lg">
+        "Thanks to JUIT Projonmo, I found mentorship and guidance that helped me
+        navigate my early career. The community support is truly unmatched."
+      </p>
+      <p class="mt-6 font-bold text-blue-600">— Tanvir Hossain, Data Analyst</p>
+    </div>
+
+    <!-- Testimonial 3 -->
+    <div
+      class="bg-gray-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition"
+    >
+      <p class="italic text-gray-700 text-lg">
+        "Being part of JUIT Projonmo has allowed me to stay updated on industry
+        trends and alumni achievements. It’s a great way to stay connected
+        beyond campus life."
+      </p>
+      <p class="mt-6 font-bold text-blue-600">
+        — Sabrina Akter, Marketing Specialist
+      </p>
+    </div>
   </div>
 </section>
 

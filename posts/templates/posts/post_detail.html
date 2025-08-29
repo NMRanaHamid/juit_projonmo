@@ -1,43 +1,142 @@
 {% extends 'base.html' %}
 {% block content %}
-<article class="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg mt-10">
+<article class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-xl mt-12">
+
   <!-- Title -->
-  <h1 class="text-5xl font-extrabold mb-6 text-gray-900">{{ post.title }}</h1>
+  <h1 class="text-5xl font-extrabold mb-6 text-gray-900 break-words">
+    {{ post.title }}
+  </h1>
 
-  <!-- Author info and date -->
+  <!-- Author info and date (safe, no profile access) -->
   <div class="flex items-center space-x-4 mb-8">
-    {% if post.author.profile.avatar %}
-      <img src="{{ post.author.profile.avatar.url }}" alt="{{ post.author.username }}" class="w-16 h-16 rounded-full object-cover border-2 border-blue-500">
-    {% else %}
-      <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-semibold">
-        {{ post.author.username|slice:":1"|upper }}
-      </div>
-    {% endif %}
-
+    <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-semibold shadow-sm">
+      {{ post.author.username|slice:":1"|upper }}
+    </div>
     <div>
       <p class="font-semibold text-lg text-blue-700">{{ post.author.username }}</p>
-      <p class="flex items-center text-gray-500 text-sm space-x-2">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2z" />
-        </svg>
-        <span>{{ post.created_at|date:"F d, Y" }}</span>
-      </p>
+      <p class="text-gray-500 text-sm">{{ post.created_at|date:"F d, Y" }}</p>
     </div>
   </div>
 
+  <!-- Post Images (all) -->
+  {% if post.images.all %}
+    <form method="post" action="{% url 'posts:delete_images' post.pk %}">
+      {% csrf_token %}
+      <div class="grid gap-4 mb-8
+                  {% if post.images.count == 1 %}grid-cols-1{% elif post.images.count == 2 %}grid-cols-2{% else %}grid-cols-3{% endif %}">
+        {% for img in post.images.all %}
+          <div class="relative group">
+            <a href="{{ img.image.url }}" target="_blank" rel="noopener">
+              <img src="{{ img.image.url }}" alt="Post Image" 
+                   class="w-full object-cover rounded-lg cursor-pointer transition transform group-hover:scale-105">
+            </a>
+            {% if user == post.author %}
+              <input type="checkbox" name="delete_images" value="{{ img.id }}"
+                     class="absolute top-2 right-2 w-5 h-5 text-red-600 bg-white border rounded cursor-pointer shadow-md hidden group-hover:block">
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      {% if user == post.author %}
+        <button type="submit" class="mb-6 bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition">
+          🗑️ Delete Selected Photos
+        </button>
+      {% endif %}
+    </form>
+  {% endif %}
+
   <!-- Content -->
-  <div class="prose max-w-none text-gray-800 leading-relaxed whitespace-pre-line">
+  <div class="prose max-w-none text-gray-800 leading-relaxed whitespace-pre-line break-words mb-8">
     {{ post.content }}
   </div>
 
-  <!-- Edit button -->
-  {% if user == post.author %}
-  <div class="mt-10">
-    <a href="{% url 'posts:post_edit' post.pk %}" 
-       class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md">
-      Edit Post
-    </a>
+  <!-- Love React -->
+  <div class="mb-6">
+    <button
+      class="flex items-center gap-2 text-pink-600 hover:text-pink-700"
+      data-like-url="{% url 'posts:toggle_like' post.pk %}"
+      data-counter-id="likes-{{post.id}}"
+      data-icon-id="heart-{{post.id}}"
+      onclick="toggleLike(this)"
+    >
+      <span id="heart-{{post.id}}">{% if user_liked %}❤️{% else %}🤍{% endif %}</span>
+      <span id="likes-{{post.id}}">{{ post.total_likes }}</span>
+    </button>
   </div>
-  {% endif %}
+
+  <!-- Comments -->
+  <div class="mt-6">
+    <h2 class="text-lg font-semibold mb-2">Comments</h2>
+
+    <!-- Add Comment Form -->
+    {% if user.is_authenticated %}
+      <form method="post" class="mb-4">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition mt-2">
+          Comment
+        </button>
+      </form>
+    {% else %}
+      <p class="text-gray-500 mb-4">You must log in to comment.</p>
+    {% endif %}
+
+    <!-- Comment List -->
+    <div class="space-y-3">
+      {% for comment in comments %}
+        <div class="border p-3 rounded-lg relative">
+          <div class="text-sm text-gray-500 mb-1">
+            <strong class="text-gray-800">{{ comment.user.username }}</strong> ·
+            {{ comment.created_at|date:"M d, Y H:i" }}
+          </div>
+          <p class="text-gray-800 break-words whitespace-pre-line">{{ comment.text }}</p>
+
+          <!-- Edit/Delete links for comment author -->
+          {% if user == comment.user %}
+          <div class="absolute top-3 right-3 flex gap-2">
+            <a href="{% url 'posts:edit_comment' comment.pk %}" class="text-blue-600 hover:underline text-sm">Edit</a>
+            <a href="{% url 'posts:delete_comment' comment.pk %}" class="text-red-600 hover:underline text-sm">Delete</a>
+          </div>
+          {% endif %}
+        </div>
+      {% empty %}
+        <p class="text-gray-500">No comments yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="flex flex-wrap gap-4 mt-6">
+    <a href="{% url 'posts:post_list' %}" 
+       class="inline-block bg-gray-100 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-200 transition shadow-md">
+      ← Back to Posts
+    </a>
+    {% if user == post.author %}
+      <a href="{% url 'posts:post_edit' post.pk %}" 
+         class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-md">
+        ✏️ Edit Post
+      </a>
+      <a href="{% url 'posts:post_delete' post.pk %}" 
+           class="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition shadow-md">
+          🗑️ Delete Post
+        </a>
+    {% endif %}
+  </div>
+
 </article>
+
+<script>
+function toggleLike(btn){
+  const url = btn.getAttribute('data-like-url');
+  const counterId = btn.getAttribute('data-counter-id');
+  const iconId = btn.getAttribute('data-icon-id');
+  fetch(url, { method: 'GET', credentials: 'same-origin' })
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById(counterId).innerText = data.total_likes;
+      document.getElementById(iconId).innerText = data.liked ? '❤️' : '🤍';
+    })
+    .catch(() => {});
+}
+</script>
 {% endblock %}

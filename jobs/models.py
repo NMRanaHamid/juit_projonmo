@@ -5,7 +5,8 @@ from django.utils.timezone import now
 
 class Job(models.Model):
     title = models.CharField(max_length=200)
-    company = models.CharField(max_length=150)
+    company_name = models.CharField(max_length=150)
+    company_url = models.URLField(max_length=250,blank=True)
     location = models.CharField(max_length=100, blank=True)
     description = models.TextField()
     requirements = models.TextField(blank=True)

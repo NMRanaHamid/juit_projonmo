@@ -1,35 +1,74 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-lg mt-10">
-  <h1 class="text-4xl font-extrabold mb-3 text-gray-900">{{ job.title }}</h1>
-  <h3 class="text-2xl text-gray-600 mb-6">{{ job.company }} &mdash; {{ job.location }}</h3>
+<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-2xl shadow-xl">
 
-  <p class="mb-6 whitespace-pre-line text-gray-700 leading-relaxed">{{ job.description }}</p>
+  <!-- Job Title -->
+  <h1 class="text-5xl font-extrabold text-gray-900 mb-2">{{ job.title }}</h1>
 
+  <!-- Company and Location -->
+  <h3 class="text-2xl text-gray-600 mb-6">
+    {{ job.company_name }}
+  </h3>
+  <p class="mb-6 text-gray-700 leading-relaxed whitespace-pre-line">{{ job.location }}</p>
+
+  <!-- Job Description -->
+  <p class="mb-6 text-gray-700 leading-relaxed whitespace-pre-line">{{ job.description }}</p>
+
+  <!-- Requirements -->
   {% if job.requirements %}
-    <h4 class="text-xl font-semibold mb-2 text-gray-800 border-l-4 border-blue-600 pl-3">Requirements:</h4>
-    <p class="mb-6 whitespace-pre-line text-gray-700 leading-relaxed">{{ job.requirements }}</p>
+    <h4 class="text-xl font-semibold mb-2 text-blue-700 border-l-4 border-blue-500 pl-3">Requirements:</h4>
+    <p class="mb-6 text-gray-700 leading-relaxed whitespace-pre-line">{{ job.requirements }}</p>
   {% endif %}
 
-  <div class="text-gray-600 space-y-1 mb-6">
-    <p><strong class="text-gray-800">Posted by:</strong> {{ job.posted_by.get_full_name|default:"Unknown" }}</p>
-    <p><strong class="text-gray-800">Posted on:</strong> {{ job.posted_at|date:"M d, Y" }}</p>
+  <!-- Job Meta Info -->
+  <div class="bg-gray-50 rounded-lg p-4 mb-6 shadow-inner text-gray-600 space-y-1">
+    <p><span class="font-semibold text-gray-800">Posted by:</span> {{ job.posted_by.get_full_name|default:"Unknown" }}</p>
+    <p><span class="font-semibold text-gray-800">Posted on:</span> {{ job.posted_at|date:"F d, Y" }}</p>
     {% if job.deadline %}
-      <p><strong class="text-gray-800">Application Deadline:</strong> {{ job.deadline|date:"M d, Y" }}</p>
+      <p><span class="font-semibold text-gray-800">Application Deadline:</span> {{ job.deadline|date:"F d, Y" }}</p>
     {% endif %}
   </div>
 
-  {% if user == job.posted_by %}
-    <div class="flex space-x-4">
+  <!-- Action Buttons -->
+  <div class="flex flex-wrap gap-4 mb-6">
+    {% if user == job.posted_by %}
       <a href="{% url 'jobs:job_update' job.pk %}" 
-         class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-md shadow-md transition duration-300">
-         Edit
+         class="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg shadow-md transition duration-300">
+         ✏️ Edit
       </a>
       <a href="{% url 'jobs:job_delete' job.pk %}" 
-         class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-md shadow-md transition duration-300">
-         Delete
+         class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md transition duration-300">
+         🗑️ Delete
       </a>
-    </div>
+    {% endif %}
+  </div>
+
+  <!-- Company URL Button -->
+   {% if user.is_authenticated %}
+  {% if job.company_url %}
+    <a href="{{ job.company_url }}" target="_blank"
+       class="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-300 mb-4">
+       Visit {{ job.company_name }}
+    </a>
   {% endif %}
+
+  <!-- Mail to Poster Button -->
+  {% if job.posted_by.email %}
+    <a href="mailto:{{ job.posted_by.email }}?subject=Application for {{ job.title }}&body=Hello {{ job.posted_by.get_full_name }},%0D%0A%0D%0AI would like to apply for the {{ job.title }} position."
+       class="inline-block px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md transition duration-300">
+        apply
+    </a>
+  {% endif %}
+  
+  {% endif %}
+
+  <!-- Back Button -->
+  <div class="mt-6">
+    <a href="{% url 'jobs:job_list' %}" 
+       class="inline-block px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg shadow transition duration-300">
+       ← Back to Jobs
+    </a>
+  </div>
+
 </div>
 {% endblock %}

@@ -1,46 +1,187 @@
-<nav class="bg-white shadow-md">
-  <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-    <a href="/" class="text-4xl font-bold text-blue-600">JUIT Projonmo</a>
-    <div class="space-x-2 flex flex-wrap justify-end items-center">
-      <a href="/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Home</button>
+<nav class="bg-gradient-to-r from-blue-50 via-white to-indigo-50 shadow-xl sticky top-0 z-50 animate-gradient-x">
+  <div class="container mx-auto px-6 py-3 flex justify-between items-center">
+
+    <!-- Logo -->
+    <a href="/" class="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent hover:from-blue-700 hover:to-indigo-700 transition-all duration-500 transform hover:scale-105 flex items-center">
+      <span class="mr-2">🎓</span> JUIT Projonmo
+    </a>
+
+    <!-- Mobile menu button -->
+    <div class="md:hidden flex items-center space-x-2">
+      <!-- Notifications icon for mobile -->
+      {% if user.is_authenticated %}
+      <div class="relative">
+        <button id="mobile-notif-btn" class="relative text-gray-700 hover:text-blue-600 focus:outline-none">
+          🔔
+          {% if unread_count > 0 %}
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+              {{ unread_count }}
+            </span>
+          {% endif %}
+        </button>
+        <div id="mobile-notif-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg overflow-hidden z-50">
+          {% if notifications %}
+            <ul>
+              {% for notif in notifications %}
+                <li class="px-4 py-2 hover:bg-gray-100 border-b last:border-b-0">
+                  <a href="{{ notif.url }}" class="block text-gray-700 text-sm">
+                    {{ notif.message }}
+                    <span class="text-gray-400 text-xs block">{{ notif.created_at|date:"M d, H:i" }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="px-4 py-2 text-gray-500 text-sm">No notifications</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <button id="menu-btn" class="text-gray-700 focus:outline-none p-2 rounded-full bg-white shadow-md hover:shadow-lg hover:bg-blue-50 transition-all duration-300">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Desktop menu -->
+    <div id="menu" class="hidden md:flex space-x-2 items-center">
+
+      <!-- Links -->
+      <a href="/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if request.path == '/' %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">🏠</span> Home
       </a>
-      <a href="/alumni/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Alumni</button>
+      <a href="/alumni/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/alumni/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">👥</span> Alumni
       </a>
-      <a href="/events/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Events</button>
+      <a href="/events/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/events/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">🎉</span> Events
       </a>
-      <a href="/news/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">News</button>
+      <a href="/news/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/news/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">📰</span> News
       </a>
-      <a href="/posts/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Posts</button>
+      <a href="/posts/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/posts/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">💬</span> Posts
       </a>
-      <a href="/jobs/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Jobs</button>
+      <a href="/jobs/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/jobs/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">💼</span> Jobs
       </a>
-      <a href="/contact/">
-        <button class="px-4 py-2 text-xl font-medium text-gray-700 hover:text-blue-500">Contact</button>
+      <a href="/contact/" class="flex items-center px-4 py-2 text-lg font-medium rounded-xl transition-all duration-300
+        {% if '/contact/' in request.path %}border-b-2 border-blue-600 text-blue-600{% else %}text-gray-700 hover:text-blue-600 hover:bg-blue-50 hover:shadow-sm{% endif %}">
+        <span class="mr-2">📞</span> Contact
       </a>
 
+      <!-- Notifications Desktop -->
       {% if user.is_authenticated %}
-        <a href="/accounts/profile/">
-          <button class="px-4 py-2 bg-green-600 text-white text-xl font-semibold rounded hover:bg-green-700"> 
-            {{ user.username }}
-          </button>
+      <div class="relative ml-4">
+        <button id="notif-btn" class="relative text-gray-700 hover:text-blue-600 focus:outline-none">
+          🔔
+          {% if unread_count > 0 %}
+            <span class="absolute -top-1 -right-1 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+              {{ unread_count }}
+            </span>
+          {% endif %}
+        </button>
+
+        <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-72 bg-white shadow-lg rounded-lg overflow-hidden z-50">
+          {% if notifications %}
+            <ul>
+              {% for notif in notifications %}
+                <li class="px-4 py-2 hover:bg-gray-100 border-b last:border-b-0">
+                  <a href="{{ notif.url }}" class="block text-gray-700 text-sm">
+                    {{ notif.message }}
+                    <span class="text-gray-400 text-xs block">{{ notif.created_at|date:"M d, H:i" }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="px-4 py-2 text-gray-500 text-sm">No notifications</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- User Auth -->
+      {% if user.is_authenticated %}
+        <a href="/accounts/profile/" class="flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-lg font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+          <span class="mr-2">👤</span> {{ user.username }}
         </a>
-        <a href="/accounts/logout/">
-          <button class="px-4 py-2 bg-red-600 text-white text-xl font-semibold rounded hover:bg-red-700">Log Out</button>
+        <a href="/accounts/logout/" class="flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-lg font-semibold rounded-xl hover:from-red-600 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+          <span class="mr-2"></span> Log Out
         </a>
       {% else %}
-        <a href="/accounts/login/">
-          <button class="px-4 py-2 bg-blue-500 text-white text-xl font-semibold rounded hover:bg-blue-600">Login</button>
+        <a href="/accounts/login/" class="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-lg font-semibold rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+          <span class="mr-2"></span> Login
         </a>
-        <a href="/accounts/register/">
-          <button class="px-4 py-2 bg-blue-600 text-white text-xl font-semibold rounded hover:bg-blue-700">Register</button>
+        <a href="/accounts/register/" class="flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-lg font-semibold rounded-xl hover:from-indigo-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
+          <span class="mr-2"></span> Register
         </a>
       {% endif %}
     </div>
   </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden px-6 py-4 space-y-2 bg-white/95 backdrop-blur-sm shadow-inner rounded-b-2xl border-t border-gray-100">
+    <a href="/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+      <span class="mr-2">🏠</span> Home
+    </a>
+    <!-- ... repeat other links for alumni, events, posts, jobs, etc ... -->
+
+    <!-- Notifications Mobile -->
+    {% if user.is_authenticated %}
+      <div class="relative">
+        <button id="mobile-notif-btn2" class="relative text-gray-700 hover:text-blue-600 focus:outline-none w-full text-left py-3 px-4 rounded-xl border hover:bg-blue-50">
+          🔔 Notifications
+          {% if unread_count > 0 %}
+            <span class="ml-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{{ unread_count }}</span>
+          {% endif %}
+        </button>
+        <div id="mobile-notif-dropdown2" class="hidden mt-2 w-full bg-white shadow-lg rounded-lg overflow-hidden z-50">
+          {% if notifications %}
+            <ul>
+              {% for notif in notifications %}
+                <li class="px-4 py-2 hover:bg-gray-100 border-b last:border-b-0">
+                  <a href="{{ notif.url }}" class="block text-gray-700 text-sm">
+                    {{ notif.message }}
+                    <span class="text-gray-400 text-xs block">{{ notif.created_at|date:"M d, H:i" }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="px-4 py-2 text-gray-500 text-sm">No notifications</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
 </nav>
+
+<script>
+const menuBtn = document.getElementById('menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+// Desktop notifications
+const notifBtn = document.getElementById('notif-btn');
+const notifDropdown = document.getElementById('notif-dropdown');
+if(notifBtn){ notifBtn.addEventListener('click', () => notifDropdown.classList.toggle('hidden')); }
+
+// Mobile notifications
+const mobileNotifBtn = document.getElementById('mobile-notif-btn2');
+const mobileNotifDropdown = document.getElementById('mobile-notif-dropdown2');
+if(mobileNotifBtn){ mobileNotifBtn.addEventListener('click', () => mobileNotifDropdown.classList.toggle('hidden')); }
+</script>
+
+<style>
+@keyframes gradient {0% { background-position:0% 50%; }50% { background-position:100% 50%; }100% { background-position:0% 50%; }}
+.animate-gradient-x {background-size:200% 200%; animation:gradient 15s ease infinite;}
+</style>

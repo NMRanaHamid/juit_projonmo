@@ -4,30 +4,49 @@
 <div class="max-w-7xl mx-auto px-4 py-10">
   <h2 class="text-3xl font-bold text-blue-800 mb-8 text-center">🎓 Alumni Directory</h2>
 
+  <!-- Search Form -->
+  <form method="GET" action="{% url 'alumni:alumni_directory' %}" class="max-w-2xl mx-auto mb-8 flex flex-col sm:flex-row gap-3">
+    <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Search by name or batch"
+           class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button type="submit" 
+            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-semibold">
+      Search
+    </button>
+  </form>
+
   {% if alumni_list %}
     {% regroup alumni_list by user.profile.batch as batch_list %}
 
     {% for batch_group in batch_list %}
-      <h3 class="text-2xl font-semibold mb-4 mt-10 border-b border-blue-300 pb-2">
-        Batch: {{ batch_group.grouper|default:"Unknown Batch" }}
-      </h3>
-      <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6">
+      <!-- Modern Batch Header -->
+      <div class="bg-gradient-to-r from-blue-100 to-blue-200 rounded-xl shadow-md p-4 mb-6 mt-10 text-center">
+        <h3 class="text-xl md:text-2xl font-bold text-blue-900">
+          🎓 Batch {{ batch_group.grouper|default:"Unknown" }}
+        </h3>
+      </div>
+
+      <div class="grid md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5">
         {% for alumni in batch_group.list %}
-          <a href="{% url 'alumni_detail' alumni.pk %}" 
-             class="block bg-white p-4 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1">
+          <a href="{% url 'alumni:alumni_detail' alumni.pk %}" 
+             class="block bg-white p-3 rounded-lg shadow hover:shadow-lg transition transform hover:-translate-y-1 max-w-xs mx-auto">
             
             {% if alumni.user.profile.avatar %}
               <img src="{{ alumni.user.profile.avatar.url }}" 
                    alt="{{ alumni.user.get_full_name }}" 
-                   class="w-full h-48 object-cover rounded mb-4 border">
+                   class="w-32 h-32 object-cover rounded-full mb-3 border mx-auto">
             {% else %}
-              <div class="w-full h-48 bg-gray-200 rounded mb-4 border flex items-center justify-center text-gray-400">
+              <div class="w-32 h-32 bg-gray-200 rounded-full mb-3 border flex items-center justify-center text-gray-400 text-sm mx-auto">
                 No Image
               </div>
             {% endif %}
 
-            <h3 class="text-xl font-semibold text-gray-800 mb-1">{{ alumni.user.get_full_name }}</h3>
-            <p class="text-sm text-gray-600">{{ alumni.current_position|default:"Position not set" }}</p>
+            <h3 class="text-lg font-semibold text-gray-800 mb-1 text-center">
+              {{ alumni.user.get_full_name }}
+            </h3>
+            <p class="text-sm text-gray-600 text-center">
+              {{ alumni.user.profile.bio|truncatechars:60 }}<br>
+              <span class="font-medium text-gray-700">Batch:</span> {{ alumni.user.profile.batch }}
+            </p>
           </a>
         {% endfor %}
       </div>
