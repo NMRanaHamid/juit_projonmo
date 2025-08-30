@@ -21,9 +21,22 @@
 
   <!-- Batch & Position -->
   <div class="mt-4 flex justify-center space-x-3 text-gray-600 text-sm font-medium">
+    {% if alumni.user.profile.batch %}
+    {% if alumni.user.profile.batch != "teacher" and alumni.user.profile.batch != "staff" and alumni.user.profile.batch != "lab assistant" %}
+        <span class="bg-blue-100 text-blue-800 px-4 py-1 rounded-full shadow-sm">
+            Batch: {{ alumni.user.profile.batch }}
+        </span>
+    {% else %}
+        <span class="bg-blue-100 text-blue-800 px-4 py-1 rounded-full shadow-sm">
+            {{ alumni.user.profile.batch }}
+        </span>
+    {% endif %}
+{% else %}
     <span class="bg-blue-100 text-blue-800 px-4 py-1 rounded-full shadow-sm">
-      Batch: {{ alumni.user.profile.batch|default:"Not set" }}
+        Not set
     </span>
+{% endif %}
+
     {% if alumni.current_position %}
     <span class="bg-green-100 text-green-800 px-4 py-1 rounded-full shadow-sm">
       {{ alumni.current_position }}

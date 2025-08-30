@@ -11,8 +11,8 @@ urlpatterns = [
 
     # Profile URLs
     path('profile/', views.my_profile_redirect, name='my_profile_redirect'),  # Redirects to user profile
-    path('profile/<str:username>/', views.profile_view, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
+    path('profile/<str:username>/', views.profile_view, name='profile'),
 
     path('delete_account/', views.delete_account, name='delete_account'),
 

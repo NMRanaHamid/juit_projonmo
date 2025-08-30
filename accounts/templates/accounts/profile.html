@@ -27,8 +27,19 @@
       <p class="font-medium text-gray-800">{{ profile.user.last_name|default:"Not set" }}</p>
     </div>
     <div class="p-4 bg-gray-50 rounded-xl shadow-sm">
-      <p class="text-sm text-gray-500">Batch</p>
-      <p class="font-medium text-gray-800">{{ profile.batch|default:"Not set" }}</p>
+      {% if profile.batch %}
+  {% if profile.batch|lower == "teacher" or profile.batch|lower == "staff" or profile.batch|lower == "lab assistant" %}
+    <p class="text-sm text-gray-500">Designation</p>
+    <p class="font-medium text-gray-800">{{ profile.batch }}</p>
+  {% else %}
+    <p class="text-sm text-gray-500">Batch</p>
+    <p class="font-medium text-gray-800">{{ profile.batch }}</p>
+  {% endif %}
+{% else %}
+  <p class="text-sm text-gray-500">Batch</p>
+  <p class="font-medium text-gray-800">Not set</p>
+{% endif %}
+
     </div>
     <div class="p-4 bg-gray-50 rounded-xl shadow-sm md:col-span-2">
       <p class="text-sm text-gray-500">Bio</p>
