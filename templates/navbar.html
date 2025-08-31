@@ -137,41 +137,83 @@
     </div>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="md:hidden hidden px-6 py-4 space-y-2 bg-white/95 backdrop-blur-sm shadow-inner rounded-b-2xl border-t border-gray-100">
-    <a href="/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
-      <span class="mr-2">🏠</span> Home
-    </a>
-    <!-- ... repeat other links for alumni, events, posts, jobs, etc ... -->
+  <!-- MOBILE MENU (Only for mobile) -->
+<div id="mobile-menu" class="md:hidden hidden px-6 py-4 space-y-2 bg-white/95 backdrop-blur-sm shadow-inner rounded-b-2xl border-t border-gray-100">
 
-    <!-- Notifications Mobile -->
-    {% if user.is_authenticated %}
-      <div class="relative">
-        <button id="mobile-notif-btn2" class="relative text-gray-700 hover:text-blue-600 focus:outline-none w-full text-left py-3 px-4 rounded-xl border hover:bg-blue-50">
-          🔔 Notifications
-          {% if unread_count > 0 %}
-            <span class="ml-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{{ unread_count }}</span>
-          {% endif %}
-        </button>
-        <div id="mobile-notif-dropdown2" class="hidden mt-2 w-full bg-white shadow-lg rounded-lg overflow-hidden z-50">
-          {% if notifications %}
-            <ul>
-              {% for notif in notifications %}
-                <li class="px-4 py-2 hover:bg-gray-100 border-b last:border-b-0">
-                  <a href="{{ notif.url }}" class="block text-gray-700 text-sm">
-                    {{ notif.message }}
-                    <span class="text-gray-400 text-xs block">{{ notif.created_at|date:"M d, H:i" }}</span>
-                  </a>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p class="px-4 py-2 text-gray-500 text-sm">No notifications</p>
-          {% endif %}
-        </div>
-      </div>
-    {% endif %}
+  <!-- Mobile menu links -->
+  <a href="/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">🏠</span> Home
+  </a>
+  <a href="/alumni/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">👥</span> Alumni
+  </a>
+  <a href="/events/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">🎉</span> Events
+  </a>
+  <a href="/news/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">📰</span> News
+  </a>
+  <a href="/posts/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">💬</span> Posts
+  </a>
+  <a href="/jobs/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">💼</span> Jobs
+  </a>
+  <a href="/contact/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+    <span class="mr-2">📞</span> Contact
+  </a>
+
+  <!-- Mobile Notifications -->
+  {% if user.is_authenticated %}
+  <div class="relative">
+    <button id="mobile-notif-btn2" class="relative text-gray-700 hover:text-blue-600 focus:outline-none w-full text-left py-3 px-4 rounded-xl border hover:bg-blue-50 flex justify-between items-center">
+      🔔 Notifications
+      {% if unread_count > 0 %}
+        <span class="ml-2 bg-red-600 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">{{ unread_count }}</span>
+      {% endif %}
+    </button>
+    <div id="mobile-notif-dropdown2" class="hidden mt-2 w-full bg-white shadow-lg rounded-lg overflow-hidden z-50">
+      {% if notifications %}
+        <ul>
+          {% for notif in notifications %}
+            <li class="px-4 py-2 hover:bg-gray-100 border-b last:border-b-0">
+              <a href="{{ notif.url }}" class="block text-gray-700 text-sm">
+                {{ notif.message }}
+                <span class="text-gray-400 text-xs block">{{ notif.created_at|date:"M d, H:i" }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="px-4 py-2 text-gray-500 text-sm">No notifications</p>
+      {% endif %}
+    </div>
   </div>
+  {% endif %}
+
+  <!-- Mobile Auth Links -->
+  {% if user.is_authenticated %}
+    <a href="/accounts/profile/" class="flex items-center py-3 px-4 rounded-xl text-gray-700 hover:text-blue-600 hover:bg-blue-50 transition-all duration-300">
+      {% if user.profile.avatar %}
+        <img src="{{ user.profile.avatar.url }}" alt="Profile Picture" class="w-8 h-8 rounded-full object-cover mr-2 border border-gray-300">
+      {% else %}
+        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-2">👤</div>
+      {% endif %}
+      Profile
+    </a>
+    <a href="/accounts/logout/" class="flex items-center py-3 px-4 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all duration-300">
+      Log Out
+    </a>
+  {% else %}
+    <a href="/accounts/login/" class="flex items-center py-3 px-4 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all duration-300">
+      Login
+    </a>
+    <a href="/accounts/register/" class="flex items-center py-3 px-4 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300">
+      Register
+    </a>
+  {% endif %}
+</div>
+
 </nav>
 
 <script>
