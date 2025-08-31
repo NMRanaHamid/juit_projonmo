@@ -50,6 +50,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = 'tailwind'
 CRISPY_TEMPLATE_PACK = 'tailwind'
 
 TAILWIND_APP_NAME = 'theme'
+CSRF_TRUSTED_ORIGINS = [
+    'https://juit-projonmo.onrender.com',
+    'http://localhost:8000',
+]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
