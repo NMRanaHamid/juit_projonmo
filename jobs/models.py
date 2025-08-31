@@ -15,4 +15,4 @@ class Job(models.Model):
     deadline = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.title} at {self.company}"
+        return f"{self.title} at {self.company_name}"

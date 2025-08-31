@@ -1,4 +1,3 @@
-# notifications/models.py
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -11,7 +10,7 @@ class Notification(models.Model):
         ('general', 'General'),
     )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE ,related_name='notifications')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     notif_type = models.CharField(max_length=20, choices=NOTIF_TYPES, default='general')
     title = models.CharField(max_length=255, blank=True)
     message = models.TextField()

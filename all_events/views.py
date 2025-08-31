@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.models import User
 from .models import Event, EventRegistration
 from .forms import EventForm
+from notifications.models import Notification
 
+# Check if user is admin
 def is_admin(user):
     return user.is_staff or user.is_superuser
 
+
+# ---------------- Event Views ---------------- #
 
 def event_list(request):
     events = Event.objects.all().order_by('-event_date')
@@ -15,7 +20,6 @@ def event_list(request):
 
 def event_detail(request, pk):
     event = get_object_or_404(Event, pk=pk)
-    # Check if the current user is registered
     is_registered = False
     if request.user.is_authenticated:
         is_registered = EventRegistration.objects.filter(event=event, user=request.user).exists()
@@ -31,6 +35,20 @@ def event_create(request):
             event = form.save(commit=False)
             event.created_by = request.user
             event.save()
+
+            # Notify all active users about new event
+            users = User.objects.filter(is_active=True)
+            for u in users:
+                # Make sure user exists
+                if u:
+                    Notification.objects.create(
+                        user=u,
+                        notif_type='event',
+                        title=f"New Event: {event.title}",
+                        message=f"A new event '{event.title}' has been created.",
+                        url=f"/events/{event.pk}/"
+                    )
+
             return redirect('all_events:event_list')
     else:
         form = EventForm()
@@ -61,9 +79,8 @@ def event_delete(request, pk):
     return render(request, 'all_events/event_confirm_delete.html', {'event': event})
 
 
-# ---------------- New Features ---------------- #
+# ---------------- Event Registration ---------------- #
 
-# Event Registration
 @login_required
 def event_register(request, pk):
     event = get_object_or_404(Event, pk=pk)
@@ -77,7 +94,8 @@ def event_register(request, pk):
     return render(request, 'all_events/event_register.html', {'event': event})
 
 
-# Registered Users List (Admin only)
+# ---------------- Registered Users (Admin) ---------------- #
+
 @staff_member_required
 def event_registered_users(request, pk):
     event = get_object_or_404(Event, pk=pk)

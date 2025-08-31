@@ -7,23 +7,37 @@
   </h1>
 
   {% if user.is_authenticated %}
-  <center>
+  <div class="text-center mb-10">
     <a href="{% url 'posts:post_create' %}" class="bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition">
       + New Post
     </a>
-  </center>
+  </div>
   {% endif %}
 </div>
 
 <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
   {% for post in posts %}
   <div class="block bg-white rounded-2xl shadow-md hover:shadow-2xl transition transform hover:-translate-y-1 duration-300 p-6 flex flex-col justify-between">
+
+    <!-- Post Title -->
     <h3 class="text-2xl font-semibold text-gray-900 mb-2 break-words">{{ post.title }}</h3>
-    <p class="text-sm text-gray-500 mb-4">
+
+    <!-- Author Info with Avatar -->
+    <p class="text-sm text-gray-500 mb-4 flex items-center gap-2">
+      {% if post.author.profile.avatar %}
+        <img src="{{ post.author.profile.avatar.url }}" 
+             alt="{{ post.author.username }}" 
+             class="w-8 h-8 rounded-full object-cover shadow-sm">
+      {% else %}
+        <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm font-semibold shadow-sm">
+          {{ post.author.username|slice:":1"|upper }}
+        </div>
+      {% endif %}
       By <span class="font-medium text-blue-600">{{ post.author.username }}</span> 
       on {{ post.created_at|date:"M d, Y" }}
     </p>
 
+    <!-- Post Images (up to 3) -->
     {% if post.images.all %}
       <div class="grid grid-cols-3 gap-2 mb-4">
         {% for img in post.images.all|slice:":3" %}
@@ -32,8 +46,10 @@
       </div>
     {% endif %}
 
+    <!-- Post Content -->
     <p class="text-gray-700 leading-relaxed line-clamp-4 break-words">{{ post.content }}</p>
 
+    <!-- Bottom Actions -->
     <div class="mt-4 flex justify-between items-center">
       <a href="{% url 'posts:post_detail' post.pk %}" class="inline-block bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-medium hover:bg-blue-200 transition">
         Read More →
@@ -54,7 +70,7 @@
     </div>
   </div>
   {% empty %}
-  <p class="text-center text-gray-500 mt-10 text-lg">No posts yet.</p>
+    <p class="text-center text-gray-500 mt-10 text-lg">No posts yet.</p>
   {% endfor %}
 </div>
 
@@ -68,7 +84,8 @@ function toggleLike(btn){
     .then(data => {
       document.getElementById(counterId).innerText = data.total_likes;
       document.getElementById(iconId).innerText = data.liked ? '❤️' : '🤍';
-    });
+    })
+    .catch(() => {});
 }
 </script>
 

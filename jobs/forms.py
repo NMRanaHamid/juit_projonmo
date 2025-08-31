@@ -8,5 +8,5 @@ class JobForm(forms.ModelForm):
         widgets = {
             'deadline': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows':4}),
-            'requirements': forms.Textarea(attrs={'rows':3}),
+            'requirements': forms.Textarea(attrs={'rows':6}),
         }

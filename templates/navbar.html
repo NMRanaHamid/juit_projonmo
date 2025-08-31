@@ -111,9 +111,18 @@
 
       <!-- User Auth -->
       {% if user.is_authenticated %}
-        <a href="/accounts/profile/" class="flex items-center px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-lg font-semibold rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
-          <span class="mr-2">👤</span> {{ user.username }}
-        </a>
+        <a href="/accounts/profile/" class="flex items-center">
+  {% if user.profile.avatar %}
+    <img src="{{ user.profile.avatar.url }}" 
+         alt="Profile Picture"
+         class="w-10 h-10 rounded-full object-cover border border-gray-300 shadow-sm">
+  {% else %}
+    <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+      👤
+    </div>
+  {% endif %}
+</a>
+
         <a href="/accounts/logout/" class="flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white text-lg font-semibold rounded-xl hover:from-red-600 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg">
           <span class="mr-2"></span> Log Out
         </a>

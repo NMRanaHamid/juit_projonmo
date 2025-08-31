@@ -9,9 +9,16 @@
 
   <!-- Author info and date (safe, no profile access) -->
   <div class="flex items-center space-x-4 mb-8">
-    <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-semibold shadow-sm">
-      {{ post.author.username|slice:":1"|upper }}
-    </div>
+    {% if post.author.profile.avatar %}
+  <img src="{{ post.author.profile.avatar.url }}" 
+       alt="{{ post.author.username }}" 
+       class="w-16 h-16 rounded-full object-cover shadow-sm">
+{% else %}
+  <div class="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-xl font-semibold shadow-sm">
+    {{ post.author.username|slice:":1"|upper }}
+  </div>
+{% endif %}
+
     <div>
       <p class="font-semibold text-lg text-blue-700">{{ post.author.username }}</p>
       <p class="text-gray-500 text-sm">{{ post.created_at|date:"F d, Y" }}</p>
@@ -39,7 +46,7 @@
       </div>
       {% if user == post.author %}
         <button type="submit" class="mb-6 bg-red-600 text-white px-4 py-2 rounded-lg shadow hover:bg-red-700 transition">
-          🗑️ Delete Selected Photos
+          Delete Selected Photos
         </button>
       {% endif %}
     </form>
@@ -118,7 +125,7 @@
       </a>
       <a href="{% url 'posts:post_delete' post.pk %}" 
            class="inline-block bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition shadow-md">
-          🗑️ Delete Post
+           Delete Post
         </a>
     {% endif %}
   </div>
