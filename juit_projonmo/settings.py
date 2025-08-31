@@ -157,3 +157,13 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'humanjr2020@gmail.com'         # Your email here
 EMAIL_HOST_PASSWORD = '12341234'      # Your email password or app password here
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: '',
+    messages.INFO: '',
+    messages.SUCCESS: '',  # <- Default "Logged in successfully"
+    messages.WARNING: 'warning',
+    messages.ERROR: 'error',
+}

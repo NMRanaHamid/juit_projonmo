@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <div class="max-w-5xl mx-auto px-6 py-12 bg-white rounded-3xl shadow-2xl">
 
   <!-- Page Title -->
@@ -7,26 +8,30 @@
     Registered Users for: {{ event.title }}
   </h1>
 
-  {% if registrations %}
-    {% regroup registrations by user.profile.batch as batch_list %}
-
-    {% for batch in batch_list %}
+  {% if grouped_registrations %}
+    {% for batch, regs in grouped_registrations.items %}
       <div class="mb-8">
         <!-- Batch Card -->
         <div class="bg-blue-50 rounded-2xl p-6 shadow-md hover:shadow-lg transition duration-300">
           <!-- Batch Title -->
           <h2 class="text-2xl font-semibold text-blue-700 mb-4 border-b border-blue-200 pb-2">
-            Batch: {{ batch.grouper }}
+            {% with batch_name=batch.grouper %}
+              {% if batch == "Teacher" or batch == "Staff" or batch == "Lab Assistant" %}
+                {{ batch }}
+              {% else %}
+                Batch: {{ batch }}
+              {% endif %}
+            {% endwith %}
           </h2>
 
           <!-- Users Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {% for reg in batch.list %}
-              <!-- Alumni Card linked to alumni detail -->
+            {% for reg in regs %}
+              <!-- User Card linked to alumni detail -->
               <a href="{% url 'alumni:alumni_detail' reg.user.alumni.pk %}" class="block">
                 <div class="flex items-center gap-4 p-3 bg-white rounded-xl shadow hover:shadow-md transition duration-300">
-                  {% if reg.user.profile.dp %}
-                    <img src="{{ reg.user.profile.dp.url }}" alt="DP" class="w-12 h-12 rounded-full object-cover border-2 border-blue-200">
+                  {% if reg.user.profile.avatar.url %}
+                    <img src="{{ reg.user.profile.avatar.url }}" alt="DP" class="w-12 h-12 rounded-full object-cover border-2 border-blue-200">
                   {% else %}
                     <div class="w-12 h-12 rounded-full bg-blue-300 flex items-center justify-center text-white font-bold text-lg">
                       {{ reg.user.username|slice:":1"|upper }}
@@ -56,4 +61,5 @@
   </div>
 
 </div>
+
 {% endblock %}

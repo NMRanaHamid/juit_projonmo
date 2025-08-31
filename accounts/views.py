@@ -6,6 +6,8 @@ from django.contrib import messages
 from .models import Profile
 from .forms import UserRegistrationForm, UserEditForm, ProfileEditForm
 from notifications.models import Notification
+from jobs.models import Job
+from posts.models import Post
 
 # ---------------- Registration ----------------
 def register_view(request):
@@ -62,12 +64,19 @@ def profile_view(request, username):
     unread_ids = [n.id for n in notifications if not n.read]
     Notification.objects.filter(id__in=unread_ids).update(read=True)
 
+    # ✅ Get user’s posted jobs and posts
+    jobs = Job.objects.filter(posted_by=profile.user).order_by('-posted_at')
+    posts = Post.objects.filter(author=profile.user).order_by('-created_at')
+
     return render(request, 'accounts/profile.html', {
         'profile': profile,
         'avatar_url': avatar_url,
         'notifications': notifications,
-        'unread_count': unread_count
+        'unread_count': unread_count,
+        'jobs': jobs,
+        'posts': posts,
     })
+
 
 # ---------------- Redirect to own profile ----------------
 @login_required

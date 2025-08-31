@@ -2,61 +2,56 @@
 {% load static %}
 {% block content %}
 
-<div class="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 p-6 space-y-6 md:space-y-0 md:space-x-12">
+<div class="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-gray-50 p-4 lg:p-12 gap-8">
 
-  
+  <!-- Left: Registration Form -->
+  <div class="w-full lg:w-1/2 flex justify-center">
+    <div class="w-full max-w-lg lg:max-w-md bg-white p-6 lg:p-8 rounded-2xl shadow-xl flex flex-col"
+         style="height: auto; min-height: 80vh;">
+      
+      <h2 class="text-2xl lg:text-3xl font-bold mb-6 text-center text-blue-700">Register</h2>
 
-  <!-- Left: Form -->
-  <div class="w-full md:w-1/2 flex justify-center">
-    <div class="w-full max-w-xl bg-white p-8 rounded-2xl shadow-xl">
-      <h2 class="text-4xl font-bold mb-6 text-center text-blue-700">Register</h2>
-
-      <form method="post" novalidate class="space-y-4">
+      <form method="post" novalidate class="w-full flex flex-col gap-4">
         {% csrf_token %}
         {% for field in form %}
-        <div class="flex flex-col">
-          <label class="mb-1 text-gray-700 font-semibold">{{ field.label }}</label>
+        <div class="flex flex-col w-full">
+          <label class="mb-1 text-gray-700 font-semibold text-sm lg:text-base">{{ field.label }}</label>
+          
+          <input
+            class="bg-white border border-gray-300 rounded-lg px-3 py-2 lg:px-4 lg:py-3 w-full text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+            type="{{ field.field.widget.input_type }}"
+            name="{{ field.name }}"
+            value="{{ field.value|default_if_none:'' }}"
+            {% if field.field.required %} required {% endif %}
+          />
 
-          <!-- Input wrapper -->
-          <div class="w-full">
-            <input
-              class="bg-white border border-gray-300 rounded-lg px-4 py-3 w-full text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              type="{{ field.field.widget.input_type }}"
-              name="{{ field.name }}"
-              value="{{ field.value|default_if_none:'' }}"
-              {% if field.field.required %} required {% endif %}
-            />
-          </div>
-
-          <!-- Errors -->
           {% for error in field.errors %}
-          <p class="text-red-600 text-sm mt-1">{{ error }}</p>
+          <p class="text-red-600 text-xs lg:text-sm mt-1">{{ error }}</p>
           {% endfor %}
         </div>
         {% endfor %}
 
         <button
           type="submit"
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold text-lg transition duration-300"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 lg:py-3 rounded-xl font-semibold text-sm lg:text-lg transition-all duration-200"
         >
           Sign Up
         </button>
       </form>
 
-      <p class="mt-6 text-center text-gray-600">
+      <p class="mt-4 lg:mt-6 text-center text-gray-600 text-sm lg:text-base">
         Already have an account?
         <a href="{% url 'accounts:login' %}" class="text-blue-600 hover:underline">Login</a>
       </p>
     </div>
   </div>
 
-  <!-- Right Image  -->
-   
-  <div class="w-full md:w-1/2 flex justify-center">
+  <!-- Right: Image -->
+  <div class="w-full lg:w-1/2 flex justify-center">
     <img
       src="{% static 'images/register.png' %}"
       alt="Registration"
-      class="rounded-xl shadow-lg object-cover w-full max-w-lg"
+      class="rounded-xl shadow-lg object-contain w-full max-w-md lg:max-w-lg h-auto"
     />
   </div>
 

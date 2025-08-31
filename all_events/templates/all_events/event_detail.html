@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <div class="max-w-4xl mx-auto px-4 py-12 bg-white rounded-3xl shadow-2xl">
+
+  <!-- Custom Messages Only -->
+  
 
   <!-- Event Title -->
   <h1 class="text-5xl font-extrabold text-blue-800 mb-4 drop-shadow-sm">{{ event.title }}</h1>
@@ -29,11 +33,14 @@
 
   <!-- Action Buttons -->
   <div class="flex flex-wrap items-center gap-4">
+
+    <!-- Back to Events -->
     <a href="{% url 'all_events:event_list' %}" 
        class="bg-gray-100 text-gray-700 px-5 py-2 rounded-full hover:bg-gray-200 shadow transition duration-300 flex items-center gap-2">
        <i class="fas fa-arrow-left"></i> Back to Events
     </a>
 
+    <!-- Admin Actions -->
     {% if user.is_staff %}
       <a href="{% url 'all_events:event_edit' event.pk %}" 
          class="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-5 py-2 rounded-full shadow hover:from-blue-700 hover:to-blue-600 transition flex items-center gap-2">
@@ -43,19 +50,35 @@
          class="bg-gradient-to-r from-red-600 to-red-500 text-white px-5 py-2 rounded-full shadow hover:from-red-700 hover:to-red-600 transition flex items-center gap-2">
          <i class="fas fa-trash"></i> Delete
       </a>
-      <!-- Registered Users List -->
-      <a href="{% url 'all_events:event_registered_users' event.pk %}"
-         class="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-5 py-2 rounded-full shadow hover:from-purple-700 hover:to-purple-600 transition flex items-center gap-2">
-         <i class="fas fa-users"></i> Registered Users
+    {% endif %}
+
+    <!-- Registered Users -->
+    <a href="{% url 'all_events:event_registered_users' event.pk %}"
+       class="bg-gradient-to-r from-purple-600 to-purple-500 text-white px-5 py-2 rounded-full shadow hover:from-purple-700 hover:to-purple-600 transition flex items-center gap-2">
+       <i class="fas fa-users"></i> Registered Users
+    </a>
+
+    <!-- Register for Event -->
+    {% if user.is_authenticated %}
+      {% if is_registered %}
+        <button disabled class="bg-gray-400 text-white px-5 py-2 rounded-full shadow flex items-center gap-2 cursor-not-allowed">
+          <i class="fas fa-user-plus"></i> Already Registered
+        </button>
+      {% else %}
+        <a href="{% url 'all_events:event_register' event.pk %}" 
+           class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full shadow hover:from-green-600 hover:to-emerald-700 transition flex items-center gap-2">
+           <i class="fas fa-user-plus"></i> Register for Event
+        </a>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'login' %}?next={{ request.path }}" 
+         class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full shadow hover:from-green-600 hover:to-emerald-700 transition flex items-center gap-2">
+         <i class="fas fa-user-plus"></i> Login to Register
       </a>
     {% endif %}
 
-    <!-- Event Registration Button -->
-    <a href="{% url 'all_events:event_register' event.pk %}" 
-       class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-full shadow hover:from-green-600 hover:to-emerald-700 transition flex items-center gap-2">
-       <i class="fas fa-user-plus"></i> Register for Event
-    </a>
   </div>
 
 </div>
+
 {% endblock %}
