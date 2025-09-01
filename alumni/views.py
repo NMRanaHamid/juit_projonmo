@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q, Case, When, Value, IntegerField
+from django.db.models import Q, Case, When, Value, IntegerField, Count
 from .models import Alumni
 
 def alumni_directory(request):
@@ -28,9 +28,22 @@ def alumni_directory(request):
         )
     ).order_by("batch_order", "user__profile__batch", "user__first_name", "user__last_name")
 
+    # ===== Batch Pie Chart Data (only batch 39–48) =====
+    batch_data = (
+        Alumni.objects.filter(user__profile__batch__in=[str(i) for i in range(39, 49)])
+        .values("user__profile__batch")
+        .annotate(count=Count("id"))
+        .order_by("user__profile__batch")
+    )
+
+    batch_labels = [item["user__profile__batch"] for item in batch_data]
+    batch_counts = [item["count"] for item in batch_data]
+
     return render(request, 'alumni/directory.html', {
         'alumni_list': alumni_list,
-        'query': query
+        'query': query,
+        'batch_labels': batch_labels,
+        'batch_counts': batch_counts,
     })
 
 
